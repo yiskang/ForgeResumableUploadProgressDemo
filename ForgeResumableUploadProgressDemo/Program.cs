@@ -37,8 +37,10 @@ namespace ForgeResumableUploadProgressDemo
             // You must provide at least one valid scope
             Scope[] scopes = new Scope[] { Scope.DataRead, Scope.DataWrite, Scope.BucketCreate, Scope.BucketRead };
 
+            // TLS enforce due to https://forge.autodesk.com/ja/node/1098
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
             oauth2TwoLegged = new TwoLeggedApi();
-            twoLeggedCredentials = oauth2TwoLegged.Authenticate(FORGE_CLIENT_ID, FORGE_CLIENT_SECRET, oAuthConstants.CLIENT_CREDENTIALS, scopes);
+            twoLeggedCredentials = oauth2TwoLegged.AuthenticateAsync(FORGE_CLIENT_ID, FORGE_CLIENT_SECRET, oAuthConstants.CLIENT_CREDENTIALS, scopes).Result;
             objectsApi.Configuration.AccessToken = twoLeggedCredentials.access_token;
         }
 
